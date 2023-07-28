@@ -1,7 +1,8 @@
 import {Button, List, ListItem} from '@ui-kitten/components';
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useContext} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import data from '../data.json';
+import {AppContext} from '../App';
 
 interface IListItem {
   title: string;
@@ -10,11 +11,9 @@ interface IListItem {
   description: string;
 }
 
-const renderItemAccessory = (): React.ReactElement => (
-  <Button size="tiny">Add to cart</Button>
-);
-
 const Content = () => {
+  const {cart, addToCart} = useContext(AppContext);
+
   return (
     <View style={styles.container}>
       <List
@@ -30,7 +29,11 @@ const Content = () => {
           <ListItem
             title={`${item.title} | $${item.price}`}
             description={`${item.description} ${index + 1}`}
-            accessoryRight={renderItemAccessory}
+            accessoryRight={() => (
+              <Button size="tiny" onPress={() => addToCart(item)}>
+                {cart.includes(item) ? 'Remove from cart' : 'Add to cart'}
+              </Button>
+            )}
           />
         )}
       />
